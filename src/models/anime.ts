@@ -1,23 +1,31 @@
-import { t } from "elysia";
+import { t, TSchema } from "elysia";
 
 const Episode = t.Object({
 	sub: t.Union([t.Number(), t.Null()]),
 	dub: t.Union([t.Number(), t.Null()]),
 });
 
+const canBeNull = (type: TSchema, def: string | number | boolean): TSchema => {
+	return t.Union([t.Null(), type], { default: def });
+};
+
+const strNull = () => canBeNull(t.String(), "");
+const numNull = () => canBeNull(t.Number(), 0);
+
 const Anime = t.Object({
-	rank: t.Number(),
-	id: t.String(),
-	poster: t.String(),
-	jname: t.String(),
-	name: t.String(),
+	rank: numNull(),
+	// id: t.Union([t.Null(), t.String()], { default: "" }),
+	id: strNull(),
+	poster: strNull(),
+	jname: strNull(),
+	name: strNull(),
 });
 
 export const SpotlightAnime = t.Object({
 	...Anime.properties,
 	description: t.String(),
 	episodes: Episode,
-	type: t.String(),
+	type: strNull(),
 	otherInfo: t.Array(t.String()),
 });
 
@@ -27,11 +35,12 @@ export const TrendingAnime = t.Object({
 
 export const LatestEpisodeAnime = t.Object({
 	...t.Omit(Anime, ["rank"]).properties,
-	duration: t.String(),
-	type: t.String(),
-	rating: t.Union([t.Number(), t.Null(), t.String()]),
+	duration: strNull(),
+	type: strNull(),
+	rating: t.Union([t.Null(), t.String()]),
 	episodes: Episode,
 });
+export const CategoryAnime = LatestEpisodeAnime;
 
 export const TopUpcomingAnime = t.Object({
 	...LatestEpisodeAnime.properties,
@@ -44,7 +53,7 @@ export const Top10Anime = t.Object({
 
 export const TopAiringAnime = t.Object({
 	...t.Omit(Anime, ["rank"]).properties,
-	type: t.String(),
+	type: strNull(),
 	episodes: Episode,
 });
 
