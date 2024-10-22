@@ -3,16 +3,19 @@ import Elysia, { t } from "elysia";
 import hia from "../../../hianime";
 import { InternalServerError, NotFoundError } from "../../../exceptions/errors";
 import { ERRORS } from "../../../models/errors";
-import { Genre } from "../../../models/genre";
+import { Producer } from "../../../models/producer";
 
-const tags = ["Genre"];
-export default new Elysia({ name: "api.genre", tags })
-	.model("Genre", Genre)
+const tags = ["Producer"];
+export default new Elysia({ name: "api.producer", tags })
+	.model("Producer", Producer)
 	.get(
 		"",
 		async ({ params: { name }, query: { page } }) => {
 			try {
-				const data = await hia.getGenreAnime(name.trim(), Number(page) || 1);
+				const data = await hia.getProducerAnimes(
+					name.trim(),
+					Number(page) || 1,
+				);
 
 				return {
 					success: true,
@@ -20,7 +23,7 @@ export default new Elysia({ name: "api.genre", tags })
 				};
 			} catch (err) {
 				if (err instanceof HiAnimeError) {
-					if (err.scraper === "getGenreAnime") {
+					if (err.scraper === "getProducerAnimes") {
 						throw new NotFoundError("Genre not found");
 					}
 				}
@@ -30,7 +33,7 @@ export default new Elysia({ name: "api.genre", tags })
 		},
 		{
 			response: {
-				200: "Genre",
+				200: "Producer",
 				500: ERRORS.INTERNAL_SERVER_ERROR,
 				404: ERRORS.NOT_FOUND,
 			},

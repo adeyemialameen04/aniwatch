@@ -17,7 +17,6 @@ const app = new Elysia()
 			},
 		}),
 	)
-	.get("/", () => "Hello Elysia")
 	.use(
 		await autoload({
 			prefix,

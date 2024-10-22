@@ -10,7 +10,12 @@ const tags: { name: string; description: string }[] = [
 	{
 		name: "Category",
 		description:
-			"Endpoints that retrieve and filter anime based on their categories, allowing users to explore anime by genre, popularity, or other classifications.",
+			"Endpoints that retrieve and filter anime based on their categories, allowing users to explore anime by genre.",
+	},
+	{
+		name: "Genre",
+		description:
+			"Endpoints that retrieve and filter anime based on their genres, allowing users to explore anime by genre.",
 	},
 ];
 
@@ -36,7 +41,6 @@ export const documentation = (app: Elysia) =>
 		.use(
 			swagger({
 				exclude: ["/doc", "/doc/json"],
-				excludeTags: ["default"],
 				path: "/docs",
 				scalarConfig: {
 					darkMode: true,
@@ -47,26 +51,11 @@ export const documentation = (app: Elysia) =>
 					},
 					hiddenClients,
 					hideDownloadButton: true,
-
 					defaultOpenAllTags: true,
 					tagsSorter: "alpha",
 				},
 				provider: "scalar",
 				documentation: {
-					components: {
-						securitySchemes: {
-							AccessTokenBearer: {
-								type: "http",
-								scheme: "bearer",
-								bearerFormat: "JWT",
-							},
-							RefreshTokenBearer: {
-								type: "http",
-								scheme: "bearer",
-								bearerFormat: "JWT",
-							},
-						},
-					},
 					info: {
 						title: "Unofficial Documentation of Aniwatch Api",
 						version: "1.0.0",
@@ -89,20 +78,6 @@ export const documentation = (app: Elysia) =>
 				provider: "swagger-ui",
 				exclude: ["/docs", "/docs/json"],
 				documentation: {
-					components: {
-						securitySchemes: {
-							AccessTokenBearer: {
-								type: "http",
-								scheme: "bearer",
-								bearerFormat: "JWT",
-							},
-							RefreshTokenBearer: {
-								type: "http",
-								scheme: "bearer",
-								bearerFormat: "JWT",
-							},
-						},
-					},
 					info: {
 						title: "Unofficial Documentation of Aniwatch Api",
 						version: "1.0.0",

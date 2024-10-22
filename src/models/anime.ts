@@ -42,6 +42,7 @@ export const LatestEpisodeAnime = t.Object({
 });
 export const CategoryAnime = LatestEpisodeAnime;
 export const GenreAnime = LatestEpisodeAnime;
+export const ProducerAnime = LatestEpisodeAnime;
 
 export const TopUpcomingAnime = t.Object({
 	...LatestEpisodeAnime.properties,
@@ -50,6 +51,12 @@ export const TopUpcomingAnime = t.Object({
 export const Top10Anime = t.Object({
 	...Anime.properties,
 	episodes: Episode,
+});
+
+export const Top10Animes = t.Object({
+	today: t.Array(Top10Anime),
+	week: t.Array(Top10Anime),
+	month: t.Array(Top10Anime),
 });
 
 export const TopAiringAnime = t.Object({
