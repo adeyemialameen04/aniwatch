@@ -1,8 +1,8 @@
 import { t } from "elysia";
 
 const Episode = t.Object({
-	sub: t.Number(),
-	dub: t.Number(),
+	sub: t.Union([t.Number(), t.Null()]),
+	dub: t.Union([t.Number(), t.Null()]),
 });
 
 const Anime = t.Object({
@@ -29,7 +29,7 @@ export const LatestEpisodeAnime = t.Object({
 	...t.Omit(Anime, ["rank"]).properties,
 	duration: t.String(),
 	type: t.String(),
-	rating: t.Null(t.String()),
+	rating: t.Union([t.Number(), t.Null(), t.String()]),
 	episodes: Episode,
 });
 
@@ -48,6 +48,12 @@ export const TopAiringAnime = t.Object({
 	episodes: Episode,
 });
 
-export const MostPopularAnime = Top10Anime;
-export const MostFavouriteAnime = Top10Anime;
-export const LatestCompletedAnime = Top10Anime;
+export const MostPopularAnime = t.Object({
+	...t.Omit(Top10Anime, ["rank"]).properties,
+});
+export const MostFavouriteAnime = t.Object({
+	...t.Omit(Top10Anime, ["rank"]).properties,
+});
+export const LatestCompletedAnime = t.Object({
+	...t.Omit(Top10Anime, ["rank"]).properties,
+});
