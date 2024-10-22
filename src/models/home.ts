@@ -27,6 +27,6 @@ export const Home = t.Object({
 		mostPopularAnimes: t.Array(MostPopularAnime),
 		mostFavoriteAnimes: t.Array(MostFavouriteAnime),
 		latestCompletedAnimes: t.Array(LatestCompletedAnime),
-		genre: t.Array(t.String()),
+		genres: t.Array(t.String()),
 	}),
 });
