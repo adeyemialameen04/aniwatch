@@ -9,7 +9,7 @@ import {
 	MostPopularAnime,
 	MostFavouriteAnime,
 	LatestCompletedAnime,
-} from "./item";
+} from "./anime";
 
 export const Home = t.Object({
 	success: t.Boolean({ default: true }),

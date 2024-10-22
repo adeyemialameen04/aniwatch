@@ -2,6 +2,7 @@ import { Elysia } from "elysia";
 import { documentation } from "./plugins/documentation";
 import { autoload } from "elysia-autoload";
 import logixlysia from "logixlysia";
+import error from "./plugins/error";
 
 const prefix = "/api/v1//" as const;
 
@@ -26,6 +27,7 @@ const app = new Elysia()
 			},
 		}),
 	)
+	.use(error)
 	.use(documentation);
 
 await app.modules;
