@@ -5,8 +5,8 @@ import type Route2 from "./routes/producer/[name]/index";
 import type Route3 from "./routes/category/[name]/index";
 
 declare global {
-    export type Routes = ElysiaWithBaseUrl<"/api/v1home", typeof Route0>
-              & ElysiaWithBaseUrl<"/api/v1genre/:name", typeof Route1>
-              & ElysiaWithBaseUrl<"/api/v1producer/:name", typeof Route2>
-              & ElysiaWithBaseUrl<"/api/v1category/:name", typeof Route3>
+    export type Routes = ElysiaWithBaseUrl<"/api/v1/home", typeof Route0>
+              & ElysiaWithBaseUrl<"/api/v1/genre/:name", typeof Route1>
+              & ElysiaWithBaseUrl<"/api/v1/producer/:name", typeof Route2>
+              & ElysiaWithBaseUrl<"/api/v1/category/:name", typeof Route3>
 }
