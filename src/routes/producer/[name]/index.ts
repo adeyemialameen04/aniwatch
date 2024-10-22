@@ -38,9 +38,9 @@ export default new Elysia({ name: "api.producer", tags })
 				404: ERRORS.NOT_FOUND,
 			},
 			detail: {
-				summary: "Retrieve a List of Animes by Genre",
+				summary: "Retrieve a List of Animes by Producer",
 				description:
-					"This endpoint allows users to retrieve a paginated list of anime titles belonging to a specific genre. The anime are filtered based on the provided genre name, and users can navigate through different pages using the `page` query parameter. If the requested genre is not found, a 404 error is returned.",
+					"This endpoint allows users to retrieve a paginated list of anime titles belonging to a specific producer. The anime are filtered based on the provided producer name, and users can navigate through different pages using the `page` query parameter. If the requested genre is not found, a 404 error is returned.",
 			},
 			params: t.Object({
 				name: t.String({ default: "shounen" }),
