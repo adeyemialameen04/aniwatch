@@ -1,12 +1,24 @@
 import { Elysia } from "elysia";
 import { documentation } from "./plugins/documentation";
+import { autoload } from "elysia-autoload";
+
+const prefix = "/api/v1//" as const;
 
 const app = new Elysia()
 	.get("/", () => "Hello Elysia")
-	.use(documentation)
-	.listen(3000);
+	.use(
+		await autoload({
+			prefix,
+			dir: "./routes/",
+			types: {
+				output: "./routes.ts",
+				typeName: "Routes",
+			},
+		}),
+	)
+	.use(documentation);
 
-console.log(
-	`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
-);
+await app.modules;
+app.listen(3000, () => app.routes.map((x) => x.path));
+
 export type App = typeof app;
