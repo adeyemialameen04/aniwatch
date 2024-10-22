@@ -2,10 +2,11 @@ import { HiAnime, HiAnimeError } from "aniwatch";
 import Elysia, { t } from "elysia";
 import hia from "../../../hianime";
 import { Category } from "../../../models/category";
-import { NotFoundError } from "../../../exceptions/errors";
+import { InternalServerError, NotFoundError } from "../../../exceptions/errors";
 import { ERRORS } from "../../../models/errors";
 
-export default new Elysia({ name: "api.category" })
+const tags = ["Category"];
+export default new Elysia({ name: "api.category", tags })
 	.model("Category", Category)
 	.get(
 		"",
@@ -15,7 +16,6 @@ export default new Elysia({ name: "api.category" })
 					name.trim() as HiAnime.AnimeCategories,
 					Number(page) || 1,
 				);
-				console.log(data ? "true" : "false");
 
 				return {
 					success: true,
@@ -28,11 +28,7 @@ export default new Elysia({ name: "api.category" })
 					}
 				}
 
-				set.status = "Not Found";
-				return {
-					success: false,
-					message: "An error occurred",
-				};
+				throw new InternalServerError("An unexpected error occurred");
 			}
 		},
 		{
@@ -42,14 +38,15 @@ export default new Elysia({ name: "api.category" })
 				404: ERRORS.NOT_FOUND,
 			},
 			detail: {
-				summary: "Get Animes by Category",
-				description: "Gets a list of animes by their categories",
+				summary: "Retrieve a List of Animes by Category",
+				description:
+					"This endpoint allows users to retrieve a paginated list of anime titles belonging to a specific category. The anime are filtered based on the provided category name, and users can navigate through different pages using the `page` query parameter. If the requested category is not found, a 404 error is returned.",
 			},
 			params: t.Object({
-				name: t.String(),
+				name: t.String({ default: "most-popular" }),
 			}),
 			query: t.Object({
-				page: t.String(),
+				page: t.String({ default: "1" }),
 			}),
 		},
 	);

@@ -23,7 +23,7 @@ const Anime = t.Object({
 
 export const SpotlightAnime = t.Object({
 	...Anime.properties,
-	description: t.String(),
+	description: strNull(),
 	episodes: Episode,
 	type: strNull(),
 	otherInfo: t.Array(t.String()),

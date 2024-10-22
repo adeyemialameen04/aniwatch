@@ -11,6 +11,7 @@
     "aniwatch": "^2.4.1",
     "elysia": "^1.1.23",
     "elysia-autoload": "^1.4.0",
+    "elysia-compress": "^1.2.1",
     "logixlysia": "^3.7.0"
   },
   "devDependencies": {
