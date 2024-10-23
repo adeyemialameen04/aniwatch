@@ -34,6 +34,8 @@ yarn-error.log*
 .vercel
 
 .wrangler
+server
+dist
 
 **/*.trace
 **/*.zip
