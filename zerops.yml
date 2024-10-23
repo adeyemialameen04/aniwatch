@@ -4,11 +4,19 @@ zerops:
     build:
       # what technologies should the build
       # container be based on (can be an array)
-      base: bun@1.1
+      base:
+        - bun@1.1
+        - nodejs@latest
+
+      os: ubuntu
 
       # what commands to use to build your app
+      prepareCommands:
+        - echo "Upgrading bun to 1.1.32"
+        - bun upgrade
       buildCommands:
         - bun install
+        - bun run postinstall
         - bun run build
 
       # select which files / folders to deploy
@@ -31,12 +39,17 @@ zerops:
       # in `run.prepareCommands` using
       # `zsc install nodejs@20`
       base: bun@1.1
-
-      # what ports your app listens on
-      # and whether it supports http traffic
+      os: ubuntu
       ports:
         - port: 3000
           httpSupport: true
+      prepareCommands:
+        - echo "Upgrading bun to 1.1.32"
+        - bun upgrade
+      start: bun run dev
 
-      # how to start your application
-      start: bun start
+    deploy:
+      readinessCheck:
+        httpget:
+          path: /docs
+          port: 3000
