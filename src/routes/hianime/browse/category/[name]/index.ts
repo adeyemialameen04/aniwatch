@@ -4,7 +4,7 @@ import { ERRORS } from "@/models/errors";
 import { HiAnime, HiAnimeError } from "aniwatch";
 import Elysia, { InternalServerError, NotFoundError, t } from "elysia";
 
-const tags = ["Browse"];
+const tags = ["Browse", "HiAnime"];
 export default new Elysia({ name: "api.category", tags })
 	.model("Category", Category)
 	.get(

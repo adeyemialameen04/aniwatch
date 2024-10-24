@@ -3,8 +3,7 @@ import compression from "elysia-compress";
 import hia from "@/hianime";
 import { Home } from "@/models/home";
 
-const tags = ["Home"];
-type HomeT = typeof Home.static;
+const tags = ["Home", "HiAnime"];
 
 export default new Elysia({ name: "api.home", tags })
 	.model("Home", Home)

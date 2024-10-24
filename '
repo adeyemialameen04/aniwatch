@@ -8,7 +8,8 @@ import anilist, {
 import { AiringAnime } from "@/models/gogoanime/anime";
 import Elysia, { t } from "elysia";
 
-export default new Elysia({ name: "api.anilist.trending" }).get(
+const tags = ["GogoAnime"];
+export default new Elysia({ name: "api.gogoanime.top-airing", tags }).get(
 	"",
 	async () => {
 		console.log(

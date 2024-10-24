@@ -5,7 +5,7 @@ import hia from "@/hianime";
 import { ERRORS } from "@/models/errors";
 import { Producer } from "@/models/producer";
 
-const tags = ["Browse"];
+const tags = ["Browse", "HiAnime"];
 export default new Elysia({ name: "api.producer", tags })
 	.model("Producer", Producer)
 	.get(
