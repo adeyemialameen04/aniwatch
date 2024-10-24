@@ -5,7 +5,7 @@ import { Genre } from "@/models/genre";
 import { HiAnimeError } from "aniwatch";
 import Elysia, { t } from "elysia";
 
-const tags = ["Browse"];
+const tags = ["Browse", "HiAnime"];
 export default new Elysia({ name: "api.genre", tags })
 	.model("Genre", Genre)
 	.get(
