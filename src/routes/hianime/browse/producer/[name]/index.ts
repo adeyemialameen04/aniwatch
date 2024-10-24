@@ -1,11 +1,11 @@
 import { HiAnimeError } from "aniwatch";
 import Elysia, { t } from "elysia";
-import hia from "../../../hianime";
-import { InternalServerError, NotFoundError } from "../../../exceptions/errors";
-import { ERRORS } from "../../../models/errors";
-import { Producer } from "../../../models/producer";
+import { InternalServerError, NotFoundError } from "@/exceptions/errors";
+import hia from "@/hianime";
+import { ERRORS } from "@/models/errors";
+import { Producer } from "@/models/producer";
 
-const tags = ["Producer"];
+const tags = ["Browse"];
 export default new Elysia({ name: "api.producer", tags })
 	.model("Producer", Producer)
 	.get(

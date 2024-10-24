@@ -1,11 +1,11 @@
 import Elysia from "elysia";
-import { HiAnime } from "aniwatch";
-import { Home } from "../../models/home";
 import compression from "elysia-compress";
-
-const hia = new HiAnime.Scraper();
+import hia from "@/hianime";
+import { Home } from "@/models/home";
 
 const tags = ["Home"];
+type HomeT = typeof Home.static;
+
 export default new Elysia({ name: "api.home", tags })
 	.model("Home", Home)
 	.use(
@@ -19,6 +19,8 @@ export default new Elysia({ name: "api.home", tags })
 		"",
 		async () => {
 			const data = await hia.getHomePage();
+			console.log(typeof Home.static);
+
 			return {
 				success: true,
 				data,
