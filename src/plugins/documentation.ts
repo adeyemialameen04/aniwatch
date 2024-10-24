@@ -8,14 +8,9 @@ const tags: { name: string; description: string }[] = [
 			"Endpoints related to general information and home page content.",
 	},
 	{
-		name: "Category",
+		name: "Browse",
 		description:
-			"Endpoints that retrieve and filter anime based on their categories, allowing users to explore anime by genre.",
-	},
-	{
-		name: "Genre",
-		description:
-			"Endpoints that retrieve and filter anime based on their genres, allowing users to explore anime by genre.",
+			"Endpoints that retrieve and filter anime based on their categories, genre and producer, allowing users to explore anime.",
 	},
 ];
 
@@ -43,8 +38,6 @@ export const documentation = (app: Elysia) =>
 				exclude: ["/doc", "/doc/json"],
 				path: "/docs",
 				scalarConfig: {
-					darkMode: true,
-					theme: "purple",
 					defaultHttpClient: {
 						targetKey: "javascript",
 						clientKey: "fetch",
@@ -52,7 +45,6 @@ export const documentation = (app: Elysia) =>
 					hiddenClients,
 					hideDownloadButton: true,
 					defaultOpenAllTags: true,
-					tagsSorter: "alpha",
 				},
 				provider: "scalar",
 				documentation: {

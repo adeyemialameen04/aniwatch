@@ -1,11 +1,11 @@
+import { InternalServerError, NotFoundError } from "@/exceptions/errors";
+import hia from "@/hianime";
+import { ERRORS } from "@/models/errors";
+import { Genre } from "@/models/genre";
 import { HiAnimeError } from "aniwatch";
 import Elysia, { t } from "elysia";
-import hia from "../../../hianime";
-import { InternalServerError, NotFoundError } from "../../../exceptions/errors";
-import { ERRORS } from "../../../models/errors";
-import { Genre } from "../../../models/genre";
 
-const tags = ["Genre"];
+const tags = ["Browse"];
 export default new Elysia({ name: "api.genre", tags })
 	.model("Genre", Genre)
 	.get(

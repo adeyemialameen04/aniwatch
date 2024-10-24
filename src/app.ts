@@ -17,6 +17,21 @@ export const app = new Elysia()
 			},
 		}),
 	)
+	.get(
+		"/",
+		() => {
+			return {
+				intro: "Welcome to aniwatch provider",
+				routes: app.routes.map((x) => x.path),
+				documentation: "/docs",
+			};
+		},
+		{
+			detail: {
+				hide: true,
+			},
+		},
+	)
 	.use(
 		await autoload({
 			prefix,
