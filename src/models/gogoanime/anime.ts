@@ -1,22 +1,8 @@
 import { t } from "elysia";
 
-export const AiringAnime = t.Object({
-	currentPage: t.Number(),
-	hasNextPage: t.Boolean(),
-	results: t.Array(
-		t.Object({
-			id: t.String(),
-			title: t.String(),
-			image: t.String(),
-			url: t.String(),
-			genres: t.Array(t.String()),
-			episodeId: t.String(),
-			episodeNumber: t.Number(),
-		}),
-	),
-});
+const strOptional = t.Optional(t.String());
 
-// Convert enums to string literals
+// Media Status enum as union
 const MediaStatus = t.Union([
 	t.Literal("Ongoing"),
 	t.Literal("Completed"),
@@ -26,31 +12,94 @@ const MediaStatus = t.Union([
 	t.Literal("Unknown"),
 ]);
 
-const SubOrSub = t.Union([
+// SubOrDub enum as union
+const SubOrDub = t.Union([
 	t.Literal("sub"),
 	t.Literal("dub"),
 	t.Literal("both"),
 ]);
 
-// Convert interfaces to object schemas
-const ITitle = t.Object({
+// Title schema
+const Title = t.Object({
 	romaji: t.Optional(t.String()),
-	english: t.Optional(t.String()),
+	english: t.Optional(t.Union([t.String(), t.Null()])),
 	native: t.Optional(t.String()),
 	userPreferred: t.Optional(t.String()),
 });
 
-export const IAnimeResult = t.Object({
+// Base schemas
+const AnimeTrailer = t.Object({
 	id: t.String(),
-	// title: t.Union([t.String(), ITitle]),
+	site: t.Optional(t.String()),
+	thumbnail: t.Optional(t.String()),
+	thumbnailHash: t.Optional(t.Union([t.String(), t.Null()])),
+});
+
+const FuzzyDate = t.Object({
+	year: t.Optional(t.Union([t.Number(), t.Null()])),
+	month: t.Optional(t.Union([t.Number(), t.Null()])),
+	day: t.Optional(t.Union([t.Number(), t.Null()])),
+});
+
+export const IAnimeResult = t.Object({
+	id: t.Union([t.String(), t.Number()]),
+	title: t.Union([t.String(), Title]),
 	url: t.Optional(t.String()),
-	image: t.Optional(t.String()),
-	imageHash: t.Optional(t.String()),
-	cover: t.Optional(t.String()),
-	coverHash: t.Optional(t.String()),
+	image: strOptional,
+	imageHash: strOptional,
+	cover: strOptional,
+	coverHash: strOptional,
+	description: strOptional,
 	status: t.Optional(MediaStatus),
 	rating: t.Optional(t.Number()),
-	// ["typeo"]: t.Optional(t.String()),
+	["type"]: t.Optional(t.String()),
 	releaseDate: t.Optional(t.Union([t.String(), t.Number()])),
-	// ...t.Record(t.String(), t.Any()),
+});
+
+// Episode schema
+const AnimeEpisode = t.Object({
+	id: t.String(),
+	title: t.Optional(t.String()),
+	description: t.Optional(t.Union([t.String(), t.Null()])),
+	number: t.Number(),
+	image: t.Optional(t.String()),
+	imageHash: t.Optional(t.String()),
+});
+
+// Complete anime info schema
+export const AnimeInfo = t.Object({
+	id: t.String(),
+	title: t.Union([t.String(), Title]),
+	image: strOptional,
+	imageHash: strOptional,
+	cover: strOptional,
+	coverHash: strOptional,
+	description: t.Optional(t.Union([t.String(), t.Null()])),
+	status: t.Optional(MediaStatus),
+	rating: t.Optional(t.Number()),
+	["type"]: t.Optional(t.String()),
+	releaseDate: t.Optional(t.Union([t.String(), t.Number()])),
+	malId: t.Optional(t.Union([t.Number(), t.String()])),
+	genres: t.Optional(t.Array(t.String())),
+	synonyms: t.Optional(t.Array(t.String())),
+	isLicensed: t.Optional(t.Boolean()),
+	isAdult: t.Optional(t.Boolean()),
+	countryOfOrigin: strOptional,
+	trailer: t.Optional(AnimeTrailer),
+	color: strOptional,
+	startDate: t.Optional(FuzzyDate),
+	endDate: t.Optional(FuzzyDate),
+	totalEpisodes: t.Optional(t.Number()),
+	season: strOptional,
+	studios: t.Optional(t.Array(t.String())),
+	subOrDub: t.Optional(SubOrDub),
+	recommendations: t.Optional(t.Array(IAnimeResult)),
+	relations: t.Optional(t.Array(IAnimeResult)),
+	episodes: t.Optional(t.Array(AnimeEpisode)),
+});
+
+// Response wrapper
+export const AnimeResponse = t.Object({
+	success: t.Boolean(),
+	data: AnimeInfo,
 });

@@ -11,7 +11,7 @@ import Elysia, { t } from "elysia";
 const tags = ["Anilist"];
 export default new Elysia({ name: "api.anilist.trending", tags }).get(
 	"",
-	async () => {
+	async ({ query: { perPage, page } }) => {
 		console.log(
 			nineAnime.isWorking,
 			gogoAnime.isWorking,
@@ -19,13 +19,20 @@ export default new Elysia({ name: "api.anilist.trending", tags }).get(
 			anify.isWorking,
 			animeFox.isWorking,
 		);
-		const data = await anilist.fetchTrendingAnime();
+		const data = await anilist.fetchTrendingAnime(
+			Number(page || 1),
+			Number(perPage) || 10,
+		);
 		return {
 			success: true,
 			data,
 		};
 	},
 	{
+		query: t.Object({
+			perPage: t.Optional(t.String({ default: "10" })),
+			page: t.String({ default: "1" }),
+		}),
 		response: {
 			200: t.Object({
 				success: t.Boolean(),
