@@ -1,27 +1,35 @@
-import anilist from "@/consumet";
-import { AnimeInfo } from "@/models/gogoanime/anime";
+import { fetchAnilistInfo } from "@/hianime/methods";
+import { redis } from "@atakan75/elysia-redis";
 import Elysia, { t } from "elysia";
 
 const tags = ["Anilist"];
-export default new Elysia({ name: "api.hianime.animeInfo", tags }).get(
-	"",
-	async ({ params: { id } }) => {
-		const data = await anilist.fetchAnimeInfo(id);
 
-		return {
-			success: true,
-			data,
-		};
-	},
-	{
-		response: {
-			200: t.Object({
-				success: t.Boolean(),
-				data: AnimeInfo,
-			}),
+export default new Elysia({ name: "api.anilist.animeInfo2", tags })
+	.use(redis())
+	.get(
+		"",
+		async ({ params: { id }, redis }) => {
+			const data = await fetchAnilistInfo(Number(id));
+
+			return {
+				success: true,
+				data,
+			};
 		},
-		params: t.Object({
-			id: t.String({ default: "163134" }),
-		}),
-	},
-);
+		{
+			// Optional response schema (if needed)
+			// response: {
+			// 	200: t.Object({
+			// 		success: t.Boolean(),
+			// 		data: AnimeInfo,
+			// 	}),
+			// },
+			params: t.Object({
+				id: t.String({ default: "163134" }), // Set default value for `id`
+			}),
+			detail: {
+				summary: "Get Anime Info Sweet Spot",
+				description: "Gets the info of an anime by anilist ID",
+			},
+		},
+	);
