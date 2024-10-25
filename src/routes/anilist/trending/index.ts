@@ -13,7 +13,6 @@ export default new Elysia({ name: "api.anilist.trending", tags }).get(
 	"",
 	async ({ query: { perPage, page } }) => {
 		console.log(
-			nineAnime.isWorking,
 			gogoAnime.isWorking,
 			animePahe.isWorking,
 			anify.isWorking,
@@ -23,6 +22,10 @@ export default new Elysia({ name: "api.anilist.trending", tags }).get(
 			Number(page || 1),
 			Number(perPage) || 10,
 		);
+		// const lol = await animePahe.fetchAnimeInfo(
+		// 	"3d2dfb80-632b-557e-dd0f-041c84e1efce",
+		// );
+		// console.log(lol);
 		return {
 			success: true,
 			data,
