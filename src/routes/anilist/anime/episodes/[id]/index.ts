@@ -1,23 +1,36 @@
+import anilist, { anify, gogoAnime } from "@/consumet";
+import hia from "@/hianime";
 import { fetchAnimeEpisodes } from "@/hianime/methods";
 import Elysia, { t } from "elysia";
 
-export default new Elysia({ name: "api.ailist.episodes" }).get(
+const tags = ["Anilist"];
+export default new Elysia({ name: "api.ailist.episodes", tags }).get(
 	"",
-	async ({ params: { id }, query: { page, perPage } }) => {
-		const data = await fetchAnimeEpisodes(
-			Number(id),
-			Number(page),
-			Number(perPage),
+	async ({ params: { id }, query: { subOrDub } }) => {
+		const data = await anilist.fetchEpisodesListById(
+			id,
+			subOrDub === "dub",
+			true,
 		);
-		return data;
+		// const data = await anilist.fetchEpisodesListById(id);
+
+		// const data = gogoAnime.(id);
+
+		return {
+			success: true,
+			data,
+			// data: data.slice(0, 10),
+		};
 	},
 	{
 		params: t.Object({
 			id: t.String({ default: "21" }),
 		}),
 		query: t.Object({
-			page: t.String({ default: "1" }),
-			perPage: t.String({ default: "10" }),
+			subOrDub: t.String({ default: "dub" }),
 		}),
+		detail: {
+			summary: "Get Episode lists",
+		},
 	},
 );

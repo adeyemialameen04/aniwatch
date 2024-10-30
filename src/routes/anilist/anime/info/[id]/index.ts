@@ -1,4 +1,4 @@
-import { fetchAnilistInfo } from "@/hianime/methods";
+import { fetchAnilistInfoBase } from "@/hianime/methods";
 import { redis } from "@atakan75/elysia-redis";
 import Elysia, { t } from "elysia";
 
@@ -9,11 +9,24 @@ export default new Elysia({ name: "api.anilist.animeInfo2", tags })
 	.get(
 		"",
 		async ({ params: { id }, redis }) => {
-			const data = await fetchAnilistInfo(Number(id));
+			// const data = await fetchAnilistInfo(Number(id));
+
+			const data = await fetchAnilistInfoBase(Number(id));
+			// const sources = await anify.fetchEpisodeSources(
+			// 	"one-piece-episode-1",
+			// 	1,
+			// 	21,
+			// );
+			// console.log(sources);
+			// // const data = await anilist.(id);
+			// console.log(data.episodes[0]);
+			// // console.log(lol);
+
+			// const data = await anilist.fetchEpisodeSources(id);
 
 			return {
 				success: true,
-				data,
+				data: data,
 			};
 		},
 		{
