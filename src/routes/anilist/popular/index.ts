@@ -12,14 +12,13 @@ export default new Elysia({ name: "api.anilist.trending", tags }).get(
 			anify.isWorking,
 			animeFox.isWorking,
 		);
-		const data = await anilist.fetchTrendingAnime(
-			Number(page || 1),
-			Number(perPage) || 10,
-		);
-		// const lol = await animePahe.fetchAnimeInfo(
-		// 	"3d2dfb80-632b-557e-dd0f-041c84e1efce",
+		const data = await anify.fetchAnimeInfoByAnilistId("171018", "9anime");
+		// const data = await anilist.provider.fetchAnimeInfoByAnilistId(
+		// 	"171018",
+		// 	// Number(page || 1),
+		// 	// Number(perPage) || 10,
 		// );
-		// console.log(lol);
+
 		return {
 			success: true,
 			data,
@@ -41,7 +40,7 @@ export default new Elysia({ name: "api.anilist.trending", tags }).get(
 			}),
 		},
 		detail: {
-			summary: "Get Trending animes from anilist",
+			summary: "Get Popular Animes from anilist",
 		},
 	},
 );

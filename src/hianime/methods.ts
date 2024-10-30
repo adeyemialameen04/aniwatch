@@ -7,25 +7,30 @@ import {
 	ANIME_QUERY,
 	HIANIME_BASEURL,
 } from "./utils/constant";
+import { AnilistAnime } from "./types";
+import { anilistMediaDetailQuery, top100anime } from "./query";
 
 // fetchAnilistInfo and call hianmie endpoints and return info with eps from hianime
-export const fetchAnilistInfo = async (id: number) => {
+
+export const fetchAnilistInfoBase = async (id: number) => {
+	const options = {
+		headers: {
+			"Content-Type": "application/json",
+			Accept: "application/json",
+		},
+		query: anilistMediaDetailQuery(id.toString()),
+		variables: {
+			id,
+		},
+	};
+
 	try {
 		let infoWithEp;
 
-		const resp = await client.post<any, { data: { data: AnilistAnime } }>(
-			ANILIST_BASEURL,
-			{
-				query: ANIME_QUERY,
-				variables: {
-					id,
-				},
-			},
-		);
+		const resp = await client.post(ANILIST_BASEURL, options, {
+			validateStatus: () => true,
+		});
 		const data = resp.data.data.Media;
-
-		const eps = await searchNScrapeEPs(data.title);
-		// const allEpisodes = await searchNScrapeEPs(data.title);
 
 		infoWithEp = {
 			...data,
@@ -38,7 +43,6 @@ export const fetchAnilistInfo = async (id: number) => {
 				...el.node,
 				voiceActors: el.voiceActors,
 			})),
-			episodesList: eps,
 		};
 
 		return infoWithEp;
@@ -48,10 +52,80 @@ export const fetchAnilistInfo = async (id: number) => {
 	}
 };
 
+export const fetchAnilistInfo = async (id: number) => {
+	const options = {
+		headers: {
+			"Content-Type": "application/json",
+			Accept: "application/json",
+		},
+		query: anilistMediaDetailQuery(id.toString()),
+		// query: ANIME_QUERY,
+		variables: {
+			id,
+		},
+	};
+
+	try {
+		let infoWithEp;
+
+		const resp = await client.post(ANILIST_BASEURL, options, {
+			validateStatus: () => true,
+		});
+		const data = resp.data.data.Media;
+		const eps = await searchNScrapeEPs(data.title);
+		// const allEpisodes = await searchNScrapeEPs(data.title);
+
+		infoWithEp = {
+			...data,
+			episodesList: eps,
+			recommendations: data.recommendations.edges.map(
+				(el) => el.node.mediaRecommendation,
+			),
+			relations: data.relations.edges.map((el) => ({ id: el.id, ...el.node })),
+			characters: data.characters.edges.map((el) => ({
+				role: el.role,
+				...el.node,
+				voiceActors: el.voiceActors,
+			})),
+		};
+
+		return infoWithEp;
+	} catch (err: any) {
+		console.error(err);
+		return null;
+	}
+};
+
+export const fetchTop100 = async (page: Number, perPage: number) => {
+	const options = {
+		headers: {
+			"Content-Type": "application/json",
+			Accept: "application/json",
+		},
+		query: top100anime,
+		variables: {
+			page,
+			perPage,
+		},
+	};
+
+	try {
+		const resp = await client.post(ANILIST_BASEURL, options, {
+			validateStatus: () => true,
+		});
+		console.log(resp.data);
+
+		return await resp.data.data.Page.media;
+	} catch (err: any) {
+		console.error(err);
+		return null;
+	}
+};
+
 export const fetchAnimeEpisodes = async (
 	id: number,
-	page: number,
-	perPage: number,
+	pageIndex: number,
+	limit: number,
 ) => {
 	try {
 		// Fetch anime data from the API
@@ -71,20 +145,19 @@ export const fetchAnimeEpisodes = async (
 
 		// Search for all episodes
 		const allEpisodes = await searchNScrapeEPs(mediaData.title);
-		const totalItems = allEpisodes?.length || 0; // Fallback to 0 if undefined
-		const totalPages = Math.ceil(totalItems / perPage);
+		const totalItems = allEpisodes?.length || 0;
 
 		// Calculate start and end index for pagination
-		const startIndex = (page - 1) * perPage;
-		const endIndex = startIndex + perPage;
-		const paginatedEpisodes = allEpisodes?.slice(startIndex, endIndex) || []; // Fallback to empty array
+		const startIndex = pageIndex * limit;
+		const endIndex = startIndex + limit;
+		const paginatedEpisodes = allEpisodes?.slice(startIndex, endIndex) || [];
 
 		return {
-			data: paginatedEpisodes,
-			page,
-			total: totalItems,
-			hasNextPage: page < totalPages,
-			perPage,
+			episodes: paginatedEpisodes,
+			pageIndex,
+			totalItems,
+			isLastPage: endIndex >= totalItems,
+			limit,
 		};
 	} catch (err: unknown) {
 		if (err instanceof Error) {
@@ -95,12 +168,14 @@ export const fetchAnimeEpisodes = async (
 		return null;
 	}
 };
+
 // search with title in hianime and call ep scraping func
 export const searchNScrapeEPs = async (searchTitle: Title) => {
+	const lol =
+		searchTitle.english || searchTitle.romaji || searchTitle.userPreferred;
+	console.log(searchTitle);
 	try {
-		const resp = await client.get(
-			`${HIANIME_BASEURL}/search?keyword=${searchTitle.english}`,
-		);
+		const resp = await client.get(`${HIANIME_BASEURL}/search?keyword=${lol}`);
 		if (!resp) return console.log("No response from hianime !");
 		const $ = load(resp.data);
 		let similarTitles: { id: string; title: string; similarity: number }[] = [];
@@ -123,9 +198,9 @@ export const searchNScrapeEPs = async (searchTitle: Title) => {
 		similarTitles.sort((a, b) => b.similarity - a.similarity);
 
 		if (
-			(searchTitle.english.match(/\Season(.+?)\d/) &&
+			(lol.match(/\Season(.+?)\d/) &&
 				similarTitles[0].title.match(/\Season(.+?)\d/)) ||
-			(!searchTitle.english.match(/\Season(.+?)\d/) &&
+			(!lol.match(/\Season(.+?)\d/) &&
 				!similarTitles[0].title.match(/\Season(.+?)\d/))
 		)
 			return getEpisodes(similarTitles[0].id);
@@ -163,6 +238,7 @@ export const getEpisodes = async (animeId: string) => {
 				number: i + 1,
 			});
 		});
+		console.log(episodesList);
 
 		return episodesList;
 	} catch (err) {
