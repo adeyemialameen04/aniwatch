@@ -1,12 +1,11 @@
-import hia from "@/hianime";
-import { getSources } from "@/hianime/methods";
+import anilist from "@/consumet";
 import Elysia, { t } from "elysia";
 
 const tags = ["Anilist"];
 export default new Elysia({ name: "api.anilist.watch", tags }).get(
 	"",
-	async ({ query: { episodeId, serverId } }) => {
-		const data = await getSources(serverId, episodeId);
+	async ({ params: { id } }) => {
+		const data = await anilist.fetchEpisodeSources(id);
 		// const lol = await hia.getEpisodeSources(episodeId);
 
 		return {
@@ -16,9 +15,8 @@ export default new Elysia({ name: "api.anilist.watch", tags }).get(
 		};
 	},
 	{
-		query: t.Object({
-			serverId: t.String(),
-			episodeId: t.String(),
+		params: t.Object({
+			id: t.String(),
 		}),
 	},
 );

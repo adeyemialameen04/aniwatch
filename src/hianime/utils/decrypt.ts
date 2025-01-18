@@ -30,6 +30,10 @@ export const getSecret = (encryptedString: string, values: number[]) => {
 		encryptedSource = encryptedString,
 		totalInc = 0;
 
+	if (typeof encryptedString !== "string") {
+		throw new Error("Expected encryptedString to be a string.");
+	}
+
 	for (let i = 0; i < values[0]!; i++) {
 		let start, inc;
 		switch (i) {

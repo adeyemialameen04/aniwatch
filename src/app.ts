@@ -42,12 +42,9 @@ export const app = new Elysia()
 			},
 		}),
 	)
-	.use(documentation);
+	.use(documentation)
+	.listen(3000);
 
 await app.modules;
-
-app.listen(3000, () => {
-	console.log(app.routes.map((x) => x.path)); // Log routes when the server starts
-});
 
 export type App = typeof app;

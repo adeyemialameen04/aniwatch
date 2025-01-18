@@ -1,5 +1,6 @@
 import { InternalServerError, NotFoundError } from "@/exceptions/errors";
 import hia from "@/hianime";
+import { getGenreAnime } from "@/hianime/new";
 import { ERRORS } from "@/models/errors";
 import { Genre } from "@/models/genre";
 import { HiAnimeError } from "aniwatch";
@@ -12,7 +13,7 @@ export default new Elysia({ name: "api.genre", tags })
 		"",
 		async ({ params: { name }, query: { page } }) => {
 			try {
-				const data = await hia.getGenreAnime(name.trim(), Number(page) || 1);
+				const data = await getGenreAnime(name.trim(), Number(page) || 1);
 
 				return {
 					success: true,

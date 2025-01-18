@@ -26,8 +26,6 @@ const error = new Elysia({ name: "plugin.errors" })
 	.error("INTERNAL_SERVER_ERROR", InternalServerError)
 	.error("CONFLICT_ERROR", ConflictError)
 	.onError(({ code, error, set }) => {
-		console.log(error, "from global");
-
 		switch (code) {
 			case "AUTHORIZATION_ERROR":
 				set.status = 401;

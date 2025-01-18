@@ -6,12 +6,6 @@ const tags = ["Anilist"];
 export default new Elysia({ name: "api.anilist.trending", tags }).get(
 	"",
 	async ({ query: { perPage, page } }) => {
-		console.log(
-			gogoAnime.isWorking,
-			animePahe.isWorking,
-			anify.isWorking,
-			animeFox.isWorking,
-		);
 		const data = await anilist.fetchTrendingAnime(
 			Number(page || 1),
 			Number(perPage) || 10,
